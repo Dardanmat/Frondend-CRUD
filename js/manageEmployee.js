@@ -43,23 +43,72 @@ var data = [
   }
 ];
 
+var nextId = 10006;
+
+
 function updateEmployees() {
-  var rows = "";
-  $.each(data, function (key, value) {
-    rows += "<tr>";
-    rows += "<td>" + value.id + "</td>";
-    rows += "<td>" + value.firstName + "</td>";
-    rows += "<td>" + value.lastName + "</td>";
-    rows += "<td>" + "no" + "</td>";
-    rows += "</tr>";
-  });
-  $("tbody").append(rows);
+    var rows = "";
+
+    var css_class = "dim-background";
+    var cls = "";
+    var counter = 0;
+
+    $.each(data, function (key, value) {
+      if(counter % 2 == 0){
+        cls = css_class;
+      }
+      counter++;
+      rows += "<tr class='"+ cls +"'>";
+      rows += "<td>" + value.id + "</td>";
+      rows += "<td>" + value.firstName + "</td>";
+      rows += "<td>" + value.lastName + "</td>";
+      rows += "<td>" + "<button class='delete-button' onclick='removeEmployee(" + value.id + "); updateEmployees();'>Cancella</button>" + "</td>";
+      rows += "</tr>";
+      cls = "";
+    });
+    $("#to-fill").html(rows);
 }
 
-$(window).ready(function () {
-  
-  updateEmployees();
-  $("tbody").append("<tr><td></td></tr>");
-  console.log("pronto");
-});
+function removeEmployee(id){
+  let i = 0;
+  $.each(data, function(key, value){
+    if(value.id == id){
+      data.splice(i, 1);
+    }
+    i++;
+  })
+}
 
+function addEmployee(name, lastname, birth, hiredate, gender){
+  data.push({
+    "id": nextId,
+    "birthDate": birth,
+    "firstName": name,
+    "lastName": lastname,
+    "gender": gender,
+    "hireDate": hiredate,
+  })
+  nextId++;
+}
+
+function saveModalInputs(){
+  addEmployee(
+    $("#name").val().trim(),
+    $("#lastname").val().trim(),
+    $("#birthday").val(),
+    $("#hiring-date").val(),
+    $("#sex").val()
+  );
+  updateEmployees();
+}
+
+$( window ).on( "load", function() {
+  updateEmployees();
+})
+
+function emptyModalInputs(){
+  $("#name").val("");
+  $("#lastname").val("");
+  $("#birthday").val("");
+  $("#hiring-date").val("");
+}
