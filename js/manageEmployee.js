@@ -58,7 +58,7 @@ function updateEmployees() {
         cls = css_class;
       }
       counter++;
-      rows += "<tr class='"+ cls +"'>";
+      rows += "<tr class='"+ cls +"' id='row-"+ value.id +"'>";
 
       //id
       rows += "<td>" + value.id + "</td>";
@@ -141,9 +141,20 @@ function removeEmployee(id){
   $.each(data, function(key, value){
     if(value.id == id){
       data.splice(key, 1);
-      //$("#" + id).closest("tr").remove(); //this option needs a recolor of the rows
-      updateEmployees();
+      $("#" + id).closest("tr").remove(); //this option needs a recolor of the rows
+      recolorRows();
+      //updateEmployees();
       return;
+    }
+  });
+}
+
+function recolorRows(){
+  $.each(data, function(key, value){
+    if(key % 2 == 0){
+      $("#row-"+value.id).addClass("dim-background");
+    }else{
+      $("#row-"+value.id).removeClass("dim-background");
     }
   });
 }
