@@ -59,24 +59,93 @@ function updateEmployees() {
       }
       counter++;
       rows += "<tr class='"+ cls +"'>";
+
+      //id
       rows += "<td>" + value.id + "</td>";
-      rows += "<td>" + value.firstName + "</td>";
-      rows += "<td>" + value.lastName + "</td>";
-      rows += "<td>" + "<button class='delete-button' onclick='removeEmployee(" + value.id + "); updateEmployees();'>Cancella</button>" + "</td>";
+
+      //nome
+      rows += "<td><span id='name-"+ value.id+"'>" + value.firstName + "</span><input type='text' class='display-none' id='input-name-"+ value.id+"'  placeholder='"+value.firstName+"'></td>";
+      
+      //cognome
+      rows += "<td><span id='lastname-"+ value.id+"'>" + value.lastName + "</span><input type='text' class='display-none' id='input-lastname-"+ value.id+"' placeholder='"+value.lastName+"'></td>";
+
+      //azione
+      rows += "<td>" + "<button class='change-button' id='change-"+value.id+"' onclick='change(" + value.id + ")'>Cambia</button>" + 
+                      "<button class='delete-button' id='" + value.id + "' onclick='removeEmployee(" + value.id + ")'>Cancella</button>"
+            "</td>"; //invece che usare l'onclick etc si poteva usare data-id (funzionalità di jquery che ci permette di cliccare e eseguire)
       rows += "</tr>";
       cls = "";
     });
     $("#to-fill").html(rows);
 }
 
+function change(id){
+  $("#name-"+id).addClass("display-none");
+  $("#input-name-"+id).removeClass("display-none");
+
+  $("#lastname-"+id).addClass("display-none");
+  $("#input-lastname-"+id).removeClass("display-none");
+
+  $("#change-"+id).removeClass("change-button");
+  $("#change-"+id).addClass("save-button");
+  $("#change-"+id).text("Salva");
+  $("#change-"+id).attr("onclick", "save("+id+")");
+}
+
+function save(id){
+  //visibilità varie
+  $("#name-"+id).removeClass("display-none");
+  $("#input-name-"+id).addClass("display-none");
+
+  $("#lastname-"+id).removeClass("display-none");
+  $("#input-lastname-"+id).addClass("display-none");
+
+  $("#change-"+id).removeClass("save-button");
+  $("#change-"+id).addClass("change-button");
+  $("#change-"+id).text("Cambia");
+  $("#change-"+id).attr("onclick", "change("+id+")");
+
+  let newName = $("#input-name-"+id).val();
+  let newLastname = $("#input-lastname-"+id).val();
+
+  //cambiamenti
+  if(newName == ""){
+    newName = $("#name-"+id).text();
+  }
+
+  if(newLastname == ""){
+    newLastname = $("#lastname-"+id).text();
+  }
+
+  $("#name-"+id).text(newName);
+  $("#lastname-"+id).text(newLastname);
+  changeNames(newName, newLastname, id);
+
+  $("#input-name-"+id).attr("placeholder", newName);
+  $("#input-lastname-"+id).attr("placeholder", newLastname);
+
+  $("#input-name-"+id).val("");
+  $("#input-lastname-"+id).val("");
+}
+
+function changeNames(name, lastname, id){
+  $.each(data, function(key,value){
+    if(value.id == id){
+      value.firstName = name;
+      value.lastName = lastname;
+    }
+  });
+}
+
 function removeEmployee(id){
-  let i = 0;
   $.each(data, function(key, value){
     if(value.id == id){
-      data.splice(i, 1);
+      data.splice(key, 1);
+      //$("#" + id).closest("tr").remove(); //this option needs a recolor of the rows
+      updateEmployees();
+      return;
     }
-    i++;
-  })
+  });
 }
 
 function addEmployee(name, lastname, birth, hiredate, gender){

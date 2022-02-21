@@ -1,6 +1,6 @@
 .header {
     color:white;
-    background-color: dimgrey;
+    background-color: orange;
     text-align: center;
     margin: 0;
     padding: 0;
@@ -24,7 +24,9 @@ html, body {
     margin-left: calc(50% - 15rem);
 }
 
-.table *{
+.table >tr,
+.table th,
+.table td{
     border: 1px solid dimgrey;
     padding: 5px;
     width: 15rem;
@@ -91,7 +93,7 @@ html, body {
 }
 
 .button:active{
-    background-color: #AAAADD;
+    background-color: orange;
 }
 
 /*copiato da w3school*/
@@ -119,7 +121,7 @@ html, body {
 
 /* The Close Button */
 .close {
-    color: #aaa;
+    color: white;
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -156,6 +158,60 @@ label{
     left: 40%;
 }
 
+.display-none{
+    display: none;
+}
+
+.save-button{
+    user-select: none;
+    background: #0C0;
+    color: white;
+    font-weight: bold;
+    font-size: large;
+    border: none;
+    border-radius: 4px;
+    width: 6rem;
+    height: 2em;
+    box-shadow: 0px 4px #080;
+    transition: 100ms ease-in;
+    margin-right: 5px;
+}
+
+.save-button:hover{
+    transform: translateY(-5px);
+    box-shadow: 0px 9px #080;
+}
+
+.save-button:active{
+    transform: translateY(3px);
+    box-shadow: 0px 1px #555;
+}
+
+.change-button{
+    user-select: none;
+    background: #00AAFF;
+    color: white;
+    font-weight: bold;
+    font-size: large;
+    border: none;
+    border-radius: 4px;
+    width: 6rem;
+    height: 2em;
+    box-shadow: 0px 4px #008dc5;
+    transition: 100ms ease-in;
+    margin-right: 5px;
+}
+
+.change-button:hover{
+    transform: translateY(-5px);
+    box-shadow: 0px 9px #008dc5;
+}
+
+.change-button:active{
+    transform: translateY(3px);
+    box-shadow: 0px 1px #555;
+}
+
 .delete-button{
     user-select: none;
     background: red;
@@ -166,13 +222,18 @@ label{
     border-radius: 4px;
     width: 6rem;
     height: 2em;
-    box-shadow: 0px 4px #666666;
+    box-shadow: 0px 4px #BB0000;
     transition: 100ms ease-in;
+}
+
+.delete-button:hover{
+    transform: translateY(-5px);
+    box-shadow: 0px 9px #BB0000;
 }
 
 .delete-button:active{
     transform: translateY(3px);
-    box-shadow: 0px 1px #444444;
+    box-shadow: 0px 1px #555;
 }
 
 .modal-button {
@@ -204,5 +265,5 @@ label{
 .modal-button:active{
     width: 18em;
     transform: rotate(360deg);
-    background-color: #AAAADD;
+    background-color: orange;
 }
