@@ -1,4 +1,4 @@
-var data = [
+var testData = [
   {
     "id": 10001,
     "birthDate": "1953-09-01",
@@ -43,8 +43,14 @@ var data = [
   }
 ];
 
-var nextId = 10006;
 
+var nextId;
+function updateNextId(){
+  $.get(lastPage, function(values,status){
+
+
+  });
+}
 
 function updateEmployees() {
     var rows = "";
@@ -141,9 +147,8 @@ function removeEmployee(id){
   $.each(data, function(key, value){
     if(value.id == id){
       data.splice(key, 1);
-      $("#" + id).closest("tr").remove(); //this option needs a recolor of the rows
+      $("#" + id).closest("tr").remove();
       recolorRows();
-      //updateEmployees();
       return;
     }
   });
@@ -182,9 +187,78 @@ function saveModalInputs(){
   updateEmployees();
 }
 
+var nextPage;
+var previousPage;
+var lastPage;
+var selfPage;
+var firstPage = "http://localhost:8080/employees";
+
+function loadFirstPage(){
+  $.get(firstPage, function(values,status){
+
+    lastPage = values._links.last.href;
+    nextPage = values._links.next.href;
+    selfPage = firstPage;
+    previousPage = selfPage;
+
+    data = values._embedded.employees;
+    updatePageNumber(values.page.number);
+    updateEmployees();
+  });
+}
+
+function loadLastPage(){
+  $.get(lastPage, function(values,status){
+
+    nextPage = "";
+    previousPage = values._links.prev.href;
+    selfPage = lastPage;
+
+    data = values._embedded.employees;
+    updatePageNumber(values.page.number);
+    updateEmployees();
+  });
+}
+
+function loadNextPage(){
+  $.get(nextPage, function(values,status){
+
+    previousPage = selfPage;
+    selfPage = nextPage;
+    nextPage = values._links.next.href;    
+
+    data = values._embedded.employees;
+    updatePageNumber(values.page.number);
+    updateEmployees();
+  });
+}
+
+function loadPreviousPage(){
+  $.get(previousPage, function(values,status){
+
+    nextPage = values._links.next.href;
+    selfPage = previousPage;
+
+    previousPage = values._links.prev.href;
+
+    data = values._embedded.employees;
+    updatePageNumber(values.page.number);
+    updateEmployees();
+  });
+}
+
+function updatePageNumber(number){
+  $("#page-counter").text(number+1);
+}
+
+var data;
+
 $( window ).on( "load", function() {
-  updateEmployees();
+  loadFirstPage();
+  updateLastId();
 })
+
+//fare la funzionje updateLastID
 
 function emptyModalInputs(){
   $("#name").val("");
@@ -192,3 +266,8 @@ function emptyModalInputs(){
   $("#birthday").val("");
   $("#hiring-date").val("");
 }
+
+/*
+- TODO
+  togliere i pulsanti quando non servono
+*/
