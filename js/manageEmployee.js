@@ -139,6 +139,27 @@ function save(id){
 
   $("#input-name-"+id).val("");
   $("#input-lastname-"+id).val("");
+
+  let payload = {
+    firstName: newName,
+    id: id,
+    lastName: newLastname,
+    birthDate: "",
+    hireDate: "",
+    gender: ""
+  };
+  console.log(id);
+  saveChanges(payload);
+}
+
+function saveChanges(payload){
+  $.ajax({
+    method: "PUT",
+    url: "http://localhost:8080/employees",
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify(payload)
+  });
 }
 
 function changeNames(name, lastname, id){
@@ -182,15 +203,28 @@ function recolorRows(){
 }
 
 function addEmployee(name, lastname, birth, hiredate, gender){
-  data.push({
+  let payload = ({
     "id": nextId,
     "birthDate": birth,
     "firstName": name,
     "lastName": lastname,
     "gender": gender,
     "hireDate": hiredate,
-  })
+  });
+  saveEmployee(payload);
+  updateEmployees();
+
   nextId++;
+}
+
+function saveEmployee(payload){
+  $.ajax({
+    method: "POST",
+    url: "http://localhost:8080/employees",
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify(payload)
+  });
 }
 
 function saveModalInputs(){
