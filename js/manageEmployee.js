@@ -41,15 +41,22 @@ var testData = [
     "hireDate": "1989-09-11T22:00:00.000+0000",
 
   }
-];
-
+];//not used
 
 var nextId;
 function updateNextId(){
   $.get(lastPage, function(values,status){
-
-
+    nextId = values._embedded.employees[countProps(values._embedded.employees)-1].id + 1;
   });
+}
+
+//rubato da stackoverflow
+function countProps(obj) {
+  var count = 0;
+  for (var p in obj) {
+    obj.hasOwnProperty(p) && count++;
+  }
+  return count; 
 }
 
 function updateEmployees() {
@@ -144,6 +151,16 @@ function changeNames(name, lastname, id){
 }
 
 function removeEmployee(id){
+  $.ajax({
+    url: firstPage + "/" + id,
+    type: 'DELETE',
+    success: function(result) {
+        removeFromTable(id);
+    }
+  });
+}
+
+function removeFromTable(id){
   $.each(data, function(key, value){
     if(value.id == id){
       data.splice(key, 1);
@@ -204,6 +221,8 @@ function loadFirstPage(){
     data = values._embedded.employees;
     updatePageNumber(values.page.number);
     updateEmployees();
+
+    updateNextId();
   });
 }
 
@@ -255,10 +274,7 @@ var data;
 
 $( window ).on( "load", function() {
   loadFirstPage();
-  updateLastId();
 })
-
-//fare la funzionje updateLastID
 
 function emptyModalInputs(){
   $("#name").val("");
@@ -270,4 +286,10 @@ function emptyModalInputs(){
 /*
 - TODO
   togliere i pulsanti quando non servono
+
+  far funzionare: 
+  - aggiunta
+  - rimozione ✔️
+  - modifica
+
 */

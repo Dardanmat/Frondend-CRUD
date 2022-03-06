@@ -76,6 +76,31 @@ html, body {
     background: #E0E0E0;
 }
 
+.paging-button{
+    width: 6em;
+    height: 3em;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    background-color: white;
+    color: dodgerblue;
+    border: 1px solid dodgerblue;
+    border-radius: 5px;
+    user-select: none;
+
+    transition: 500ms ease-out;
+}
+
+.paging-button:hover{
+    color:white;
+    background-color: dodgerblue;
+    transform: rotateY(360deg);
+}
+
+.paging-button:active{
+    color: dodgerblue;
+}
+
 .button{
     width: 6em;
     height: 3em;
