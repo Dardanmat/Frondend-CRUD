@@ -141,21 +141,21 @@ function save(id){
   $("#input-lastname-"+id).val("");
 
   let payload = {
-    firstName: newName,
-    id: id,
-    lastName: newLastname,
-    birthDate: "",
-    hireDate: "",
-    gender: ""
+    "firstName": newName,
+    "id": id,
+    "lastName": newLastname,
+    "birthDate": "03-16-2022",
+    "hireDate": "03-16-2022",
+    "gender": "M"
   };
   console.log(id);
-  saveChanges(payload);
+  saveChanges(payload, id);
 }
 
-function saveChanges(payload){
+function saveChanges(payload, id){
   $.ajax({
     method: "PUT",
-    url: "http://localhost:8080/employees",
+    url: "http://localhost:8080/employees/" + id,
     dataType: "json",
     contentType: "application/json",
     data: JSON.stringify(payload)
@@ -203,14 +203,14 @@ function recolorRows(){
 }
 
 function addEmployee(name, lastname, birth, hiredate, gender){
-  let payload = ({
+  let payload = {
     "id": nextId,
     "birthDate": birth,
     "firstName": name,
     "lastName": lastname,
     "gender": gender,
     "hireDate": hiredate,
-  });
+  };
   saveEmployee(payload);
   updateEmployees();
 
@@ -243,6 +243,7 @@ var previousPage;
 var lastPage;
 var selfPage;
 var firstPage = "http://localhost:8080/employees";
+var totPages;
 
 function loadFirstPage(){
   $.get(firstPage, function(values,status){
@@ -257,6 +258,8 @@ function loadFirstPage(){
     updateEmployees();
 
     updateNextId();
+    totPages = values.page.totalPages;
+    checkPageButtons(values.page.number);
   });
 }
 
@@ -270,6 +273,8 @@ function loadLastPage(){
     data = values._embedded.employees;
     updatePageNumber(values.page.number);
     updateEmployees();
+    totPages = values.page.totalPages;
+    checkPageButtons(values.page.number);
   });
 }
 
@@ -283,6 +288,8 @@ function loadNextPage(){
     data = values._embedded.employees;
     updatePageNumber(values.page.number);
     updateEmployees();
+    totPages = values.page.totalPages;
+    checkPageButtons(values.page.number);
   });
 }
 
@@ -297,6 +304,8 @@ function loadPreviousPage(){
     data = values._embedded.employees;
     updatePageNumber(values.page.number);
     updateEmployees();
+    totPages = values.page.totalPages;
+    checkPageButtons(values.page.number);
   });
 }
 
@@ -315,6 +324,42 @@ function emptyModalInputs(){
   $("#lastname").val("");
   $("#birthday").val("");
   $("#hiring-date").val("");
+}
+
+function checkPageButtons(pageNum){
+  switch(pageNum){
+    case 0:
+      $("#first-page").addClass("display-none");
+      $("#previous-page").addClass("display-none");
+
+      $("#next-page").removeClass("display-none");
+      $("#last-page").removeClass("display-none");
+
+      break;
+    case 1:
+      $("#first-page").removeClass("display-none");
+      $("#previous-page").addClass("display-none");
+
+      $("#next-page").removeClass("display-none");
+      $("#last-page").removeClass("display-none");
+      break;
+    case totPages-2:
+      $("#next-page").addClass("display-none");
+      $("#last-page").removeClass("display-none");
+
+      $("#first-page").removeClass("display-none");
+      $("#previous-page").removeClass("display-none");
+      break;
+    case totPages-1:
+      $("#next-page").addClass("display-none");
+      $("#last-page").addClass("display-none");
+
+      $("#first-page").removeClass("display-none");
+      $("#previous-page").removeClass("display-none");
+      break;
+    default:
+      
+  }
 }
 
 /*
