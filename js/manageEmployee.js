@@ -43,13 +43,6 @@ var testData = [
   }
 ];//not used
 
-var nextId;
-function updateNextId(){
-  $.get(lastPage, function(values,status){
-    nextId = values._embedded.employees[countProps(values._embedded.employees)-1].id + 1;
-  });
-}
-
 //rubato da stackoverflow
 function countProps(obj) {
   var count = 0;
@@ -140,16 +133,19 @@ function save(id){
   $("#input-name-"+id).val("");
   $("#input-lastname-"+id).val("");
 
-  let payload = {
-    "firstName": newName,
-    "id": id,
-    "lastName": newLastname,
-    "birthDate": "03-16-2022",
-    "hireDate": "03-16-2022",
-    "gender": "M"
-  };
-  console.log(id);
+  console.log(findEmployee(id));
+
+  findEmployee(id);
+
   saveChanges(payload, id);
+}
+
+function findEmployee(id){
+  $.each(data, function(key, value){
+    if(value.id == id){
+      return value;
+    }
+  });
 }
 
 function saveChanges(payload, id){
@@ -204,7 +200,6 @@ function recolorRows(){
 
 function addEmployee(name, lastname, birth, hiredate, gender){
   let payload = {
-    "id": nextId,
     "birthDate": birth,
     "firstName": name,
     "lastName": lastname,
@@ -213,8 +208,6 @@ function addEmployee(name, lastname, birth, hiredate, gender){
   };
   saveEmployee(payload);
   updateEmployees();
-
-  nextId++;
 }
 
 function saveEmployee(payload){
@@ -257,7 +250,6 @@ function loadFirstPage(){
     updatePageNumber(values.page.number);
     updateEmployees();
 
-    updateNextId();
     totPages = values.page.totalPages;
     checkPageButtons(values.page.number);
   });
@@ -271,6 +263,7 @@ function loadLastPage(){
     selfPage = lastPage;
 
     data = values._embedded.employees;
+
     updatePageNumber(values.page.number);
     updateEmployees();
     totPages = values.page.totalPages;
@@ -308,6 +301,8 @@ function loadPreviousPage(){
     checkPageButtons(values.page.number);
   });
 }
+
+
 
 function updatePageNumber(number){
   $("#page-counter").text(number+1);
